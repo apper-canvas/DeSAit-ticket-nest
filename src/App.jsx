@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Moon, Sun, Menu, X, Search, User, Ticket } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
+import ProfileDropdown from './components/ProfileDropdown'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -12,6 +13,10 @@ function App() {
   })
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  
+  const profileRef = useRef(null)
+  const mobileProfileRef = useRef(null)
   
   useEffect(() => {
     if (darkMode) {
@@ -22,7 +27,27 @@ function App() {
     localStorage.setItem('darkMode', JSON.stringify(darkMode))
   }, [darkMode])
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close profile dropdown when clicking outside
+      if (
+        profileRef.current && 
+        !profileRef.current.contains(event.target) &&
+        mobileProfileRef.current && 
+        !mobileProfileRef.current.contains(event.target)
+      ) {
+        setProfileMenuOpen(false)
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const toggleDarkMode = () => setDarkMode(!darkMode)
+  const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen)
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -48,9 +73,22 @@ function App() {
                 <Search className="h-5 w-5 text-surface-600 dark:text-surface-300" />
               </button>
               
-              <button className="p-2 rounded-full hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
-                <User className="h-5 w-5 text-surface-600 dark:text-surface-300" />
-              </button>
+              <div className="relative" ref={profileRef}>
+                <button 
+                  className={`p-2 rounded-full transition-colors ${
+                    profileMenuOpen 
+                      ? 'bg-surface-100 dark:bg-surface-700' 
+                      : 'hover:bg-surface-100 dark:hover:bg-surface-700'
+                  }`}
+                  onClick={toggleProfileMenu}
+                >
+                  <User className="h-5 w-5 text-surface-600 dark:text-surface-300" />
+                </button>
+                
+                <AnimatePresence>
+                  {profileMenuOpen && <ProfileDropdown isDesktop={true} />}
+                </AnimatePresence>
+              </div>
               
               <button 
                 onClick={toggleDarkMode}
@@ -106,9 +144,22 @@ function App() {
                     <Search className="h-5 w-5 text-surface-600 dark:text-surface-300" />
                   </button>
                   
-                  <button className="p-2 rounded-full hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
-                    <User className="h-5 w-5 text-surface-600 dark:text-surface-300" />
-                  </button>
+                  <div className="relative" ref={mobileProfileRef}>
+                    <button 
+                      className={`p-2 rounded-full transition-colors ${
+                        profileMenuOpen 
+                          ? 'bg-surface-100 dark:bg-surface-700' 
+                          : 'hover:bg-surface-100 dark:hover:bg-surface-700'
+                      }`}
+                      onClick={toggleProfileMenu}
+                    >
+                      <User className="h-5 w-5 text-surface-600 dark:text-surface-300" />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {profileMenuOpen && <ProfileDropdown isDesktop={false} />}
+                    </AnimatePresence>
+                  </div>
                   
                   <button 
                     onClick={toggleDarkMode}
