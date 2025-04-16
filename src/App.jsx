@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import { Moon, Sun, Menu, X, Search, User, Ticket } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Home from './pages/Home'
+import MoviesPage from './pages/MoviesPage'
+import EventsPage from './pages/EventsPage'
+import PlaysPage from './pages/PlaysPage'
+import SportsPage from './pages/SportsPage'
 import NotFound from './pages/NotFound'
 import ProfileDropdown from './components/ProfileDropdown'
 import SearchModal from './components/SearchModal'
@@ -19,6 +23,7 @@ function App() {
   
   const profileRef = useRef(null)
   const mobileProfileRef = useRef(null)
+  const location = useLocation()
   
   useEffect(() => {
     if (darkMode) {
@@ -47,29 +52,71 @@ function App() {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+  
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [location.pathname])
 
   const toggleDarkMode = () => setDarkMode(!darkMode)
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen)
   const openSearchModal = () => setSearchModalOpen(true)
   const closeSearchModal = () => setSearchModalOpen(false)
   
+  // Check if a navigation item is active
+  const isActive = (path) => {
+    if (path === '/' && location.pathname === '/') return true
+    if (path !== '/' && location.pathname.startsWith(path)) return true
+    return false
+  }
+  
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 bg-white dark:bg-surface-800 shadow-sm backdrop-blur-md bg-opacity-90 dark:bg-opacity-90">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Ticket className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              TicketNest
-            </span>
+            <Link to="/" className="flex items-center gap-2">
+              <Ticket className="h-7 w-7 text-primary" />
+              <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                TicketNest
+              </span>
+            </Link>
           </div>
           
           <div className="hidden md:flex items-center space-x-6">
             <nav className="flex items-center space-x-6">
-              <a href="#" className="text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Movies</a>
-              <a href="#" className="text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Events</a>
-              <a href="#" className="text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Plays</a>
-              <a href="#" className="text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Sports</a>
+              <Link 
+                to="/movies" 
+                className={`text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                  isActive('/movies') ? 'text-primary dark:text-primary-light' : ''
+                }`}
+              >
+                Movies
+              </Link>
+              <Link 
+                to="/events" 
+                className={`text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                  isActive('/events') ? 'text-primary dark:text-primary-light' : ''
+                }`}
+              >
+                Events
+              </Link>
+              <Link 
+                to="/plays" 
+                className={`text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                  isActive('/plays') ? 'text-primary dark:text-primary-light' : ''
+                }`}
+              >
+                Plays
+              </Link>
+              <Link 
+                to="/sports" 
+                className={`text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                  isActive('/sports') ? 'text-primary dark:text-primary-light' : ''
+                }`}
+              >
+                Sports
+              </Link>
             </nav>
             
             <div className="flex items-center space-x-4">
@@ -142,10 +189,38 @@ function App() {
               className="md:hidden bg-white dark:bg-surface-800 border-t border-surface-200 dark:border-surface-700"
             >
               <div className="container mx-auto px-4 py-3 flex flex-col space-y-4">
-                <a href="#" className="py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Movies</a>
-                <a href="#" className="py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Events</a>
-                <a href="#" className="py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Plays</a>
-                <a href="#" className="py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Sports</a>
+                <Link 
+                  to="/movies" 
+                  className={`py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                    isActive('/movies') ? 'text-primary dark:text-primary-light' : ''
+                  }`}
+                >
+                  Movies
+                </Link>
+                <Link 
+                  to="/events" 
+                  className={`py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                    isActive('/events') ? 'text-primary dark:text-primary-light' : ''
+                  }`}
+                >
+                  Events
+                </Link>
+                <Link 
+                  to="/plays" 
+                  className={`py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                    isActive('/plays') ? 'text-primary dark:text-primary-light' : ''
+                  }`}
+                >
+                  Plays
+                </Link>
+                <Link 
+                  to="/sports" 
+                  className={`py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors ${
+                    isActive('/sports') ? 'text-primary dark:text-primary-light' : ''
+                  }`}
+                >
+                  Sports
+                </Link>
                 
                 <div className="flex items-center space-x-4 py-2">
                   <button 
@@ -193,6 +268,10 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/plays" element={<PlaysPage />} />
+          <Route path="/sports" element={<SportsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -220,10 +299,10 @@ function App() {
             <div>
               <h3 className="text-lg font-semibold mb-4 text-white">Categories</h3>
               <ul className="space-y-2 text-surface-300 text-sm">
-                <li><a href="#" className="hover:text-primary-light transition-colors">Movies</a></li>
-                <li><a href="#" className="hover:text-primary-light transition-colors">Events</a></li>
-                <li><a href="#" className="hover:text-primary-light transition-colors">Plays</a></li>
-                <li><a href="#" className="hover:text-primary-light transition-colors">Sports</a></li>
+                <li><Link to="/movies" className="hover:text-primary-light transition-colors">Movies</Link></li>
+                <li><Link to="/events" className="hover:text-primary-light transition-colors">Events</Link></li>
+                <li><Link to="/plays" className="hover:text-primary-light transition-colors">Plays</Link></li>
+                <li><Link to="/sports" className="hover:text-primary-light transition-colors">Sports</Link></li>
               </ul>
             </div>
             
