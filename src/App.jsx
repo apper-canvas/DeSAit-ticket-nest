@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import ProfileDropdown from './components/ProfileDropdown'
+import SearchModal from './components/SearchModal'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -14,6 +15,7 @@ function App() {
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [searchModalOpen, setSearchModalOpen] = useState(false)
   
   const profileRef = useRef(null)
   const mobileProfileRef = useRef(null)
@@ -48,6 +50,8 @@ function App() {
 
   const toggleDarkMode = () => setDarkMode(!darkMode)
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen)
+  const openSearchModal = () => setSearchModalOpen(true)
+  const closeSearchModal = () => setSearchModalOpen(false)
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -69,7 +73,11 @@ function App() {
             </nav>
             
             <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-full hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
+              <button 
+                onClick={openSearchModal}
+                className="p-2 rounded-full hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
+                aria-label="Search"
+              >
                 <Search className="h-5 w-5 text-surface-600 dark:text-surface-300" />
               </button>
               
@@ -140,7 +148,11 @@ function App() {
                 <a href="#" className="py-2 text-surface-800 dark:text-surface-100 hover:text-primary dark:hover:text-primary-light font-medium transition-colors">Sports</a>
                 
                 <div className="flex items-center space-x-4 py-2">
-                  <button className="p-2 rounded-full hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
+                  <button 
+                    onClick={openSearchModal}
+                    className="p-2 rounded-full hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
+                    aria-label="Search"
+                  >
                     <Search className="h-5 w-5 text-surface-600 dark:text-surface-300" />
                   </button>
                   
@@ -245,6 +257,13 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Search Modal */}
+      <AnimatePresence>
+        {searchModalOpen && (
+          <SearchModal isOpen={searchModalOpen} onClose={closeSearchModal} />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
