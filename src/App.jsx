@@ -10,6 +10,7 @@ import SportsPage from './pages/SportsPage'
 import NotFound from './pages/NotFound'
 import ProfileDropdown from './components/ProfileDropdown'
 import SearchModal from './components/SearchModal'
+import BookingPage from './pages/BookingPage'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -272,6 +273,7 @@ function App() {
           <Route path="/events" element={<EventsPage />} />
           <Route path="/plays" element={<PlaysPage />} />
           <Route path="/sports" element={<SportsPage />} />
+          <Route path="/booking" element={<BookingPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
