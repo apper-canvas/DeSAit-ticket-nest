@@ -281,7 +281,7 @@ function MainFeature() {
           {/* Book Button */}
           <button
             onClick={handleBookTickets}
-            className="w-full btn btn-primary py-3 text-lg font-medium"
+            className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-lg text-lg font-medium transition-colors"
           >
             Book Tickets
           </button>
